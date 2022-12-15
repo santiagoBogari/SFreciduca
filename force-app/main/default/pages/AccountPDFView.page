@@ -1,0 +1,213 @@
+<apex:page standardStylesheets="false" sidebar="true" standardController="Account" extensions="ContactViewPDFController" renderAs="advanced_pdf" >
+ <apex:repeat value="{!resultList}" var="wrapper" id="repetidor">
+  <head>
+    
+<style type="text/css">	
+	 @page {
+@top-center {
+    content: element(header);
+}
+}
+
+div.header {
+padding: 10px;
+position: running(header);
+}
+
+.pagenumber:before {
+content: counter(page);
+}
+
+.pagecount:before {
+content: counter(pages);
+}         
+        
+</style> </head>
+    <header>
+ <div class="header">
+ 	<img src="{!$Resource.header_boletin}" width="100%" height="20%"/>
+ </div> </header>
+    
+   <!--<apex:image url="{!$Resource.header_boletin}" width="100%" height="20%"/>-->
+	<div style="page-break-inside: avoid;">
+     <div style="padding:10px text-align: center">
+         <h2 style="text-align: center;size:12">
+               INFORME DEL ALUMNO
+         </h2>
+         <H3 style="text-align: center">
+            Programa: {!wrapper.programa.Programa__r.Name}              
+         </H3>
+         <h2 style="text-align:right">
+             <apex:outputText value="{0}{1,date, MM '/' yyyy}">
+                 <apex:param value="Fecha:"/>
+                <apex:param value="{!wrapper.seguimiento.Fecha_de_Informe__c}"/><br/>
+             </apex:outputText>
+         </h2>
+     </div>
+     <div style="height: 140px; font-size:12pt;padding-top:5px; padding-left:10px;padding-bottom:5px; padding-right:4px; border:1px solid black;">
+        <div>
+            <apex:outputPanel rendered="{!if(wrapper.ImagenDeAlumno == null , true ,false)}">  
+                <img src="{!$Resource.user_avatar}" style="float: right;" width="20%" height="20%"/>
+             </apex:outputPanel>	
+            <apex:outputPanel rendered="{!if(wrapper.ImagenDeAlumno == null , false ,true)}">  
+                <img src="{!('/sfc/servlet.shepherd/version/download/'+ wrapper.ImagenDeAlumno)}"  style="float: right;"  width="140" height="140"/>
+             </apex:outputPanel>
+        </div>
+         Alumno: {!wrapper.boletin.Alumno__r.Name} <br/>
+         <apex:outputText value="Fecha de Nacimiento: {!wrapper.boletin.Alumno__r.Birthdate}" /><br/>
+         Edad: {!wrapper.boletin.Alumno__r.Edad__c} <br/>
+         Estado: {!wrapper.seguimiento.Estado__c} <br/>
+         Institución educativa: {!wrapper.boletin.Alumno__r.npsp__Primary_Affiliation__r.Name} <br/>
+         Localidad: {!wrapper.boletin.Alumno__r.MailingCity} <br/>
+     </div>
+     <h3 style="color: green; border-bottom:1px solid gray">
+         Observaciones del alumno
+     </h3>
+         {!wrapper.seguimiento.a_Observaciones_Personales__c}<br/>
+     <h3 style="color: green; border-bottom:1px solid gray">
+         Situación escolar
+     </h3>
+     
+        
+	<div style="page-break-inside: avoid;">
+     <apex:pageBlock >
+       <apex:pageBlockTable value="{!wrapper.listaDeCalificaciones}" var="calificacion" style="padding:7px 5px 0px 5px;; border:1px solid #90EE90">
+            <apex:column headerValue="Materia" value="{!calificacion.Materia__r.Name}" style="border-top:0.5px solid #90EE90; width:50%; margin-left:0px"/>
+            <apex:column headerValue="1° Trimestre" value="{!calificacion.Primer_trimestre__c}" style="border-top:1px solid #90EE90; border-left:1px solid #90EE90; text-align: center; width:100px"/>
+            <apex:column headerValue="2° Trimestre" value="{!calificacion.Segundo_trimestre__c}" style="border-top:1px solid #90EE90; border-left:1px solid #90EE90; text-align: center; width:100px"/>
+            <apex:column headerValue="3° Trimestre" value="{!calificacion.Tercer_trimestre__c}" style="border-top:1px solid #90EE90; border-left:1px solid #90EE90; text-align: center; width:100px"/>
+            <apex:column value="{!calificacion.Final__c}" style="border-top:1px solid #90EE90; border-left:1px solid #90EE90; text-align: center"/>
+           </apex:pageBlockTable>
+        </apex:pageBlock>
+
+     <table style="width:97.8%; border-collapse:collapse; padding:7px 5px 0px 5px">
+         <apex:repeat >
+         	<tr>
+         	 <th style="border:1px solid #90EE90;width:50%">Promedios</th>
+             <td style="border:1px solid #90EE90; text-align: center; width:100px">{!wrapper.boletin.Primer_Promedio__c}</td>
+             <td style="border:1px solid #90EE90; text-align: center; width:100px">{!wrapper.boletin.Segundo_Promedio__c}</td>
+             <td style="border:1px solid #90EE90; text-align: center; width:100px">{!wrapper.boletin.Tercer_Promedio__c}</td>
+             <td style="border:1px solid #90EE90; text-align: center">{!wrapper.boletin.Final_Promedio__c}</td>
+         	</tr>
+         </apex:repeat>
+         <tr>
+         	 <th style="border:1px solid #90EE90;width:50%">Promedios</th>
+             <td style="border:1px solid #90EE90; text-align: center; width:100px">{!wrapper.boletin.Primer_Promedio__c}</td>
+             <td style="border:1px solid #90EE90; text-align: center; width:98px">{!wrapper.boletin.Segundo_Promedio__c}</td>
+             <td style="border:1px solid #90EE90; text-align: center; width:98px">{!wrapper.boletin.Tercer_Promedio__c}</td>
+             <td style="border:1px solid #90EE90; text-align: center">{!wrapper.boletin.Final_Promedio__c}</td>
+         </tr>
+     </table>
+    </div>
+    <br/>
+     <table style="margin-top:15px;width:98%; border-collapse:collapse;page-break-inside: avoid; text-align: center">
+        <tr>
+            <th style="border:1px solid #90EE90"></th>
+            <th style="border:1px solid #90EE90">Concepto</th>
+            <th style="border:1px solid #90EE90; width: 70%">Observaciones</th>
+         </tr>
+         <tr>
+         	 <th style="border:1px solid #90EE90">Esfuerzo</th>
+             <td style="border:1px solid #90EE90">{!wrapper.boletin.Esfuerzo__c}</td>
+             <td style="border:1px solid #90EE90">{!wrapper.boletin.Observaciones_Esfuerzo__c}</td>
+         </tr>
+     </table> 
+        
+    <div> 
+     <h3 style="border:1px solid #90EE90; text-align:center;page-break-inside: avoid">
+         Asistencia a clase del trimestre actual
+     </h3>
+    
+     <apex:pageBlock rendered="{!if(wrapper.seguimiento.Nro_de_Informe__c =='1',true,false)}">
+         <table style="margin-top:15px;width:100%; border-collapse:collapse; page-break-inside: avoid; text-align: center">
+             <tr>
+                <th style="border:1px solid #90EE90"></th>
+                <th style="border:1px solid #90EE90">Cantidad de Faltas</th>
+                <th style="border:1px solid #90EE90">Acumulado anual</th>
+                <th style="border:1px solid #90EE90; width: 50%">Observaciones</th>
+             </tr>
+             <tr style="border:1px solid green">
+                <th style="border:1px solid #90EE90"><apex:outputLabel value="{!$ObjectType.Inasistencia__c.fields.Primer_trimestre__c.label}" /></th>
+                <td style="border:1px solid #90EE90; text-align: center">{!wrapper.listaDeInasistencias[0].Primer_trimestre__c}</td>
+                <!-- <td style="border:1px solid #90EE90">{!wrapper.seguimiento.d_Asistencia_a_Clase__c}</td> -->
+                <td style="border:1px solid #90EE90; text-align: center">{!wrapper.listaDeInasistencias[0].Acumulado_Anual__c}</td>
+                <td style="border:1px solid #90EE90">{!wrapper.boletin.Observaciones_de_Inasistencia_a_Clase__c}</td>
+             </tr>
+         </table>   
+  	 </apex:pageBlock>
+     
+     <apex:pageBlock rendered="{!if(wrapper.seguimiento.Nro_de_Informe__c =='2',true,false)}">
+         <table style="margin-top:15px;width:100%; border-collapse:collapse; page-break-inside: avoid; text-align: center">
+             <tr>
+                <th style="border:1px solid #90EE90"></th>
+                <th style="border:1px solid #90EE90">Cantidad de Faltas</th>
+                <th style="border:1px solid #90EE90">Acumulado anual</th>
+                <th style="border:1px solid #90EE90; width: 50%">Observaciones</th>
+             </tr>
+             <tr style="border:1px solid green">
+                <th style="border:1px solid #90EE90"><apex:outputLabel value="{!$ObjectType.Inasistencia__c.fields.Segundo_trimestre__c.label}" /></th>
+                <td style="border:1px solid #90EE90; text-align: center">{!wrapper.listaDeInasistencias[0].Segundo_trimestre__c}</td>
+                <!-- <td style="border:1px solid #90EE90">{!wrapper.seguimiento.d_Asistencia_a_Clase__c}</td> -->
+                <td style="border:1px solid #90EE90; text-align: center">{!wrapper.listaDeInasistencias[0].Acumulado_Anual__c}</td>
+                <td style="border:1px solid #90EE90">{!wrapper.boletin.Observaciones_de_Inasistencia_a_Clase__c}</td>
+             </tr>
+         </table>   
+  	 </apex:pageBlock>
+     
+     <apex:pageBlock rendered="{!if(wrapper.seguimiento.Nro_de_Informe__c =='3',true,false)}">
+         <table style="margin-top:15px;width:100%; border-collapse:collapse; page-break-inside: avoid; text-align: center">
+             <tr>
+                <th style="border:1px solid #90EE90"></th>
+                <th style="border:1px solid #90EE90">Cantidad de Faltas</th>
+                <th style="border:1px solid #90EE90">Acumulado anual</th>
+                <th style="border:1px solid #90EE90; width: 50%">Observaciones</th>
+             </tr>
+             <tr style="border:1px solid green">
+                <th style="border:1px solid #90EE90; text-align: center"><apex:outputLabel value="{!$ObjectType.Inasistencia__c.fields.Tercer_trimestre__c.label}" /></th>
+                <td style="border:1px solid #90EE90">{!wrapper.listaDeInasistencias[0].Tercer_trimestre__c}</td>
+                <!-- <td style="border:1px solid #90EE90">{!wrapper.seguimiento.d_Asistencia_a_Clase__c}</td> -->
+                <td style="border:1px solid #90EE90; text-align: center">{!wrapper.listaDeInasistencias[0].Acumulado_Anual__c}</td>
+                <td style="border:1px solid #90EE90">{!wrapper.boletin.Observaciones_de_Inasistencia_a_Clase__c}</td>
+             </tr>
+         </table>   
+  	 </apex:pageBlock>
+        </div>
+     <br/>
+     <br/>
+     <br/>
+     
+     <h3 style="color: green; border-bottom:1px solid gray">
+         Actividades del Programa
+     </h3>
+    <div style="page-break-after:always;">
+     <table style="margin-top:15px;width:100%; border-collapse:collapse; page-break-inside: avoid; text-align: center">
+         <tr>
+         	<th style="border:1px solid #90EE90">Actividades</th>
+            <th style="border:1px solid #90EE90; width: 15%">Concepto</th>
+            <th style="border:1px solid #90EE90; width: 65%">Observaciones</th>
+         </tr>
+         <tr>
+         	<th style="border:1px solid #90EE90">Desempeño en el Acompañamiento Educativo</th>
+            <th style="border:1px solid #90EE90; font-weight: normal">{!wrapper.seguimiento.a_Espacio_de_Estudio__c}</th>
+            <th style="border:1px solid #90EE90; font-weight: normal">{!wrapper.seguimiento.a_Observaciones_Espacio_de_Estudio__c}</th>
+         </tr>
+         <tr>
+         	<th style="border:1px solid #90EE90">Desempeño en Desarrollo Personal</th>
+            <th style="border:1px solid #90EE90; font-weight: normal">{!wrapper.seguimiento.d_Espacio_Desarrollo_Personal__c}</th>
+            <th style="border:1px solid #90EE90; font-weight: normal">{!wrapper.seguimiento.d_Observaciones_Desarrollo_Personal__c}</th>
+         </tr>
+         <tr>
+            <th style="border:1px solid #90EE90">Desempeño en Capacitaciones</th>
+           <th style="border:1px solid #90EE90; font-weight: normal">{!wrapper.seguimiento.b_Capacitaciones__c}</th>
+           <th style="border:1px solid #90EE90; font-weight: normal">{!wrapper.seguimiento.b_Observaciones_Capacitaci_n__c}</th>
+        </tr>
+        <tr>
+            <th style="border:1px solid #90EE90">Desempeño en la Práctica Educativa</th>
+           <th style="border:1px solid #90EE90; font-weight: normal">{!wrapper.seguimiento.c_Practica_Educativa__c}</th>
+           <th style="border:1px solid #90EE90; font-weight: normal">{!wrapper.seguimiento.c_Observaciones_Practica_Educativa__c}</th>
+        </tr>
+     </table>
+    </div>
+    </div>  
+ </apex:repeat>
+</apex:page>

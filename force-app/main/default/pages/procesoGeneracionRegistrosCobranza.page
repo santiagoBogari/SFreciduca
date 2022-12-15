@@ -1,0 +1,32 @@
+<apex:page controller="GeneradorRegistrosCobranzaController">
+    <script>
+        function setFocusOnLoad() {}
+    </script>
+    <apex:messages />
+    <apex:form >
+        <apex:pageblock title="Proceso Generación de Registro de Cobranzas">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Iniciar Proceso" action="{!runProcess}"/>
+                <apex:commandButton value="Cancelar Proceso" action="{!cancelProcess}"/>
+            </apex:pageBlockButtons>
+            <apex:pageblockSection id="processDetail" title="Ultimo Proceso Ejecutado/Ejecutandose">
+                <apex:outputField value="{!ultimoProceso.startDate__c}"  />
+                <apex:outputField value="{!ultimoProceso.Estado_Ejecucion__c}"/>
+                <apex:outputField value="{!ultimoProceso.Items_Procesados__c}"/>
+                <apex:outputField value="{!ultimoProceso.Items_Procesados_Erroneos__c}"/>
+                <apex:actionPoller rerender="processDetail" interval="5"/>
+            </apex:pageblockSection>
+        </apex:pageblock>
+        <apex:pageblock title="Depuración Registros de Cobranzas">
+            <apex:pageBlockButtons >
+                <apex:commandButton value="Borrar Registros" action="{!deleteProcess}"/>
+            </apex:pageBlockButtons>
+            <apex:pageblockSection >
+                <apex:pageBlockSectionItem >
+                    <apex:outputLabel value="Fecha a depurar" for="idFechaBorrar" />
+                    <apex:inputField value="{!task.activitydate}" id="idFechaBorrar" />
+                </apex:pageBlockSectionItem>
+            </apex:pageblockSection>                
+        </apex:pageblock>
+    </apex:form>
+</apex:page>
